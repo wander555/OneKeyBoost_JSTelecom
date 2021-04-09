@@ -67,25 +67,25 @@ def startConnect():
  # 最多尝试3次，不行就直接退出
     if(maxConnectTime == 3):
         logging.error(
-            "------------------------------尝试超过3次，退出！------------------------------")
+            "------------------------------地址加载失败!尝试超过3次，退出！------------------------------")
         driver.quit()
         return
 
     isSuccess = getUrl()
     # 地址获取成功
     if isSuccess:
-        logging.info(
-            "------------------------------地址获取成功，开始执行方法！------------------------------")
+        # logging.info(
+        #     "------------------------------地址获取成功，开始执行方法！------------------------------")
         startMyWork()
     else:
-        logging.error(
-            "------------------------------地址加载失败，休眠30秒后，重新加载------------------------------")
+        # logging.error(
+        #     "------------------------------地址加载失败，休眠30秒后，重新加载------------------------------")
 
         maxConnectTime = maxConnectTime + 1
         # 地址加载失败
         time.sleep(30)
-        logging.info(
-            "------------------------------休眠结束，开始重新加载------------------------------")
+        # logging.info(
+        #     "------------------------------休眠结束，开始重新加载------------------------------")
         startConnect()
 
 
@@ -96,8 +96,8 @@ def getUrl():
         return True
 
     except Exception as e:
-        logging.error(
-            "------------------------------加载失败！------------------------------")
+        # logging.error(
+        #     "------------------------------加载失败！------------------------------")
         return False
 
 
@@ -108,8 +108,8 @@ def startMyWork():
 
     # 最多尝试3次，不行就直接退出
     if(maxLoadTime == 5):
-        logging.error(
-            "------------------------------尝试超过5次，退出！------------------------------")
+        # logging.error(
+        #     "------------------------------尝试超过5次，退出！------------------------------")
         driver.quit()
         return
 
@@ -117,20 +117,20 @@ def startMyWork():
     flag, d_time = startClick()
 
     if(flag):
-        logging.info("================== 操作成功！==================")
+        logging.info("操作成功！")
         driver.quit()
         return
     else:
         # 失败，时间对不上，则sleep
         maxLoadTime = maxLoadTime + 1
 
-        logging.info(
-            "------------------------------开始休眠------------------------------")
+        # logging.info(
+        #     "------------------------------时间未到,开始休眠------------------------------")
 
         # 时间过长，大于15分钟，则直接退出
         if(d_time > 900):
-            logging.error(
-                "------------------------------时间过长，直接退出------------------------------")
+            # logging.error(
+            #     "------------------------------时间大于15分钟，直接退出------------------------------")
             driver.quit()
             return
         else:
@@ -154,7 +154,7 @@ def startClick():
 
     except Exception as e:
         logging.error(
-            "------------------------------找不到确认按钮，直接退出------------------------------")
+            "------------------------------找不到试用按钮，直接退出------------------------------")
         driver.quit()
         return
 
@@ -163,10 +163,10 @@ def startClick():
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "btnExperiencesOK")))
 
-        logging.info(
-            "------------------------------已经到期，点击确定试用------------------------------")
+        # logging.info(
+        #     "------------------------------已经到期，点击确定试用------------------------------")
         # 已经到期——点击确定试用
-        time.sleep(2)
+        time.sleep(1)
         driver.find_element_by_xpath('//input[@id="btnExperiencesOK"]').click()
 
         # 截图
@@ -183,9 +183,9 @@ def startClick():
 
         delayTime = getDelayTime(text)
 
-        logging.info(
-            "------------------------------没有到期，找到到期的日期------------------------------")
-        logging.info(delayTime)
+        # logging.info(
+        #     "------------------------------没有到期，找到到期的日期------------------------------")
+        # logging.info(delayTime)
 
         return False, delayTime
 
@@ -206,14 +206,14 @@ def getDelayTime(text):
     d1 = datetime.datetime.strptime(nowTime, '%Y-%m-%d %H:%M:%S')
     d2 = datetime.datetime.strptime(finalTime, '%Y-%m-%d %H:%M:%S')
 
-    logging.info(
-        "------------------------------到期日期------------------------------")
-    # 到期日期
-    logging.info(d2)
-    logging.info(
-        "------------------------------当前日期------------------------------")
-    # 当前日期
-    logging.info(d1)
+    # logging.info(
+    #     "------------------------------到期日期------------------------------")
+    # # 到期日期
+    # logging.info(d2)
+    # logging.info(
+    #     "------------------------------当前日期------------------------------")
+    # # 当前日期
+    # logging.info(d1)
 
     # 比较日期,如果 到期日期 < 当前日期
     if(d1 > d2):
@@ -222,10 +222,11 @@ def getDelayTime(text):
     else:
         differSecond = (d2 - d1).seconds
         # return (d2 - d1).seconds + 2
-    return 124 if differSecond < 120 else differSecond
+    return 150 if differSecond < 130 else differSecond
 
 
 if __name__ == '__main__':
     # 刷新
     # driver.navigate().refresh();
     startConnect()
+
