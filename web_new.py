@@ -12,6 +12,7 @@ from selenium.webdriver.chrome.service import Service
 import logging
 import importlib
 import sys
+import os
 importlib.reload(sys)
 
 # 初始化日志对象
@@ -46,8 +47,8 @@ class MyWebBoost():
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--disable-gpu')
-        s = Service(chromedriver)
-        self.driver = webdriver.Chrome(service=s, options=chrome_options)
+        self.s = Service(chromedriver)
+        self.driver = webdriver.Chrome(service=self.s, options=chrome_options)
         # 设置超时，双重保险
         self.driver.set_page_load_timeout(30)
         self.driver.set_script_timeout(30)
@@ -231,8 +232,11 @@ class MyWebBoost():
 
     # 退出Chromedriver
     def quit(self):
-        self.driver.close()
+        # self.driver.close()
         self.driver.quit()
+        self.s.stop()
+        os.system('ps -ef|grep chromedriver|grep -v grep|awk \'{print $2}\'|xargs kill -9')
+        os.system('ps -ef|grep chrome|grep -v grep|awk \'{print $2}\'|xargs kill -9')
 
 
 # 推送微信
